@@ -8,43 +8,344 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/EmpSystem.styles.css" asp-append-version="true"/>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --sidebar-bg: #1e2a3a;
+            --sidebar-accent: #4f8ef7;
+            --topbar-height: 60px;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f0f4f8;
+            margin: 0;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            min-height: 100vh;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-brand {
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .sidebar-brand .brand-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .sidebar-brand .brand-sub {
+            font-size: 0.68rem;
+            color: var(--sidebar-accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* Nav links */
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.65);
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 10px 16px;
+            border-radius: 8px;
+            margin: 2px 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .sidebar .nav-link:hover {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+        }
+
+        .sidebar .nav-link.active {
+            background: var(--sidebar-accent);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Parent toggle link */
+        .sidebar .nav-link[data-bs-toggle="collapse"] {
+            cursor: pointer;
+        }
+
+        .sidebar .nav-link[data-bs-toggle="collapse"] .collapse-arrow {
+            margin-left: auto;
+            font-size: 0.75rem;
+            transition: transform 0.2s;
+        }
+
+        .sidebar .nav-link[data-bs-toggle="collapse"][aria-expanded="true"] .collapse-arrow {
+            transform: rotate(90deg);
+        }
+
+        /* Sub-menu */
+        .sidebar-submenu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-submenu .nav-link {
+            font-size: 0.82rem;
+            padding: 8px 16px 8px 42px;
+            color: rgba(255,255,255,0.5);
+            margin: 1px 8px;
+        }
+
+        .sidebar-submenu .nav-link:hover {
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+        }
+
+        .sidebar-submenu .nav-link.active {
+            background: rgba(79,142,247,0.2);
+            color: var(--sidebar-accent);
+            font-weight: 600;
+        }
+
+        .sidebar-section {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            color: rgba(255,255,255,0.25);
+            padding: 16px 24px 6px;
+        }
+
+        /* User footer */
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 14px 12px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .user-avatar {
+            width: 34px; height: 34px;
+            background: var(--sidebar-accent);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .user-name { font-size: 0.8rem; font-weight: 600; color: #fff; }
+        .user-role { font-size: 0.68rem; color: rgba(255,255,255,0.4); }
+
+        /* TOPBAR */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            height: var(--topbar-height);
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            z-index: 900;
+        }
+
+        .topbar-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1a202c;
+        }
+
+        .topbar-btn {
+            width: 36px; height: 36px;
+            background: #f0f4f8;
+            border: none;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .topbar-btn:hover {
+            background: #e2e8f0;
+            color: var(--sidebar-accent);
+        }
+
+        /* MAIN */
+        .main-wrapper {
+            margin-left: var(--sidebar-width);
+            padding-top: var(--topbar-height);
+            min-height: 100vh;
+        }
+
+        .main-content {
+            padding: 28px 32px;
+        }
+
+        footer {
+            background: #fff;
+            border-top: 1px solid #e2e8f0;
+            padding: 14px 32px;
+            font-size: 0.78rem;
+            color: #94a3b8;
+        }
+
+        footer a { color: var(--sidebar-accent); text-decoration: none; }
+
+        /* Mobile */
+        .sidebar-toggle { display: none; }
+
+        @@media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+            .sidebar.open { transform: translateX(0); }
+            .main-wrapper { margin-left: 0; }
+            .topbar { left: 0; }
+            .sidebar-toggle { display: flex; }
+        }
+    </style>
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EmpSystem</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                </ul>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-name">EmpSystem</div>
+        <div class="brand-sub">HR Management</div>
+    </div>
+
+    <div class="pt-2">
+        <div class="sidebar-section">Main Menu</div>
+
+        <!-- Home -->
+        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
+           asp-area="" asp-controller="Home" asp-action="Index">
+            <i class="bi bi-house-door"></i> Home
+        </a>
+
+        <!-- Employee -->
+        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Employee" ? "" : "collapsed")"
+           data-bs-toggle="collapse" data-bs-target="#employeeMenu"
+           aria-expanded="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Employee" ? "true" : "false")">
+            <i class="bi bi-people"></i>
+            Employee
+            <i class="bi bi-chevron-right collapse-arrow"></i>
+        </a>
+        <div class="collapse @(ViewContext.RouteData.Values["controller"]?.ToString() == "Employee" ? "show" : "")" id="employeeMenu">
+            <ul class="sidebar-submenu">
+                <li>
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Employee" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                       asp-area="" asp-controller="Employee" asp-action="Index">
+                        <i class="bi bi-list-ul me-1"></i> List All
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Employee" && ViewContext.RouteData.Values["action"]?.ToString() == "Create" ? "active" : "")"
+                       asp-area="" asp-controller="Employee" asp-action="Add">
+                        <i class="bi bi-person-plus me-1"></i> Add Employee
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Department -->
+        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Department" ? "" : "collapsed")"
+           data-bs-toggle="collapse" data-bs-target="#departmentMenu"
+           aria-expanded="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Department" ? "true" : "false")">
+            <i class="bi bi-diagram-3"></i>
+            Department
+            <i class="bi bi-chevron-right collapse-arrow"></i>
+        </a>
+        <div class="collapse @(ViewContext.RouteData.Values["controller"]?.ToString() == "Department" ? "show" : "")" id="departmentMenu">
+            <ul class="sidebar-submenu">
+                <li>
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Department" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                       asp-area="" asp-controller="Department" asp-action="Index">
+                        <i class="bi bi-list-ul me-1"></i> List All
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Department" && ViewContext.RouteData.Values["action"]?.ToString() == "Add" ? "active" : "")"
+                       asp-area="" asp-controller="Department" asp-action="Add">
+                        <i class="bi bi-building-add me-1"></i> Add Department
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="user-pill">
+            <div class="user-avatar">AD</div>
+            <div>
+                <div class="user-name">Admin</div>
+                <div class="user-role">Administrator</div>
             </div>
         </div>
-    </nav>
-</header>
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
+    </div>
+</aside>
+
+<!-- TOPBAR -->
+<div class="topbar">
+    <div class="d-flex align-items-center gap-3">
+        <button class="topbar-btn sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+            <i class="bi bi-list"></i>
+        </button>
+        <span class="topbar-title">@ViewData["Title"]</span>
+    </div>
+    <div class="d-flex gap-2">
+        <button class="topbar-btn"><i class="bi bi-bell"></i></button>
+        <button class="topbar-btn"><i class="bi bi-gear"></i></button>
+    </div>
 </div>
 
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2026 - EmpSystem - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+<!-- MAIN CONTENT -->
+<div class="main-wrapper">
+    <div class="main-content">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
     </div>
-</footer>
+    <footer>
+        &copy; 2026 EmpSystem &mdash; <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </footer>
+</div>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+
+@* <script src="~/lib/jquery/dist/jquery.js"></script> *@
+@* <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script> *@
+@* <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script> *@
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

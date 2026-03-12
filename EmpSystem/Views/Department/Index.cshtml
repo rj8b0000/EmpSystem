@@ -1,8 +1,35 @@
-@model TModel
-
+@model IEnumerable<EmpSystem.ViewModel.DepartmentViewModal>
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewData["Title"] = "All Employees";
 }
-
-<h2>title</h2>
+ 
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="p-4">All Departments</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 p-4">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Department Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var department in Model)
+                {
+                    <tr>
+                        <td>@department.DepartmentId</td>
+                        <td>@department.DepartmentName</td>
+                        <td><a class="btn btn-dark">Edit</a></td>
+                        <td><a class="btn btn-danger">Delete</a></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

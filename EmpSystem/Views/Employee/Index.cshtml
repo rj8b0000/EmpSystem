@@ -1,8 +1,62 @@
-@model TModel
-
+@model IEnumerable<EmpSystem.ViewModel.EmployeeViewModal>
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewData["Title"] = "All Employees";
 }
-
-<h2>title</h2>
+ 
+<div class="container p-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="p-4">All Employees</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form class="d-flex" asp-action="Index" asp-controller="Employee">
+                <input name="searchString" class="form-control me-1" type="search" placeholder="Search" area-label="Search"/>
+                <button class="btn btn-dark" type="submit">Search by Name</button>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <a asp-action="Index" class="text-dark">Back to Full List</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 p-4">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"><a class="text-dark" asp-controller="Employee" asp-action="Index" asp-route-sortOrder=@ViewData["NameSortParam"] asp-route-currentFilter="@ViewData["CurrentFilter"]">FirstName</a></th>
+                    <th scope="col">LastName</th>
+                    <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["DateOfBirthSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-dark">DateOfBirth</a></th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">PhoneNumber</th>
+                    <th scope="col">Address</th>
+                    <th scope="col"><a asp-action="Index" asp-route-sortOrder="@ViewData["IsActiveSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="text-dark">IsActive</a></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var employee in Model)
+                {
+                    <tr>
+                        <td>@employee.EmployeeId</td>
+                        <td>@employee.FirstName</td>
+                        <td>@employee.LastName</td>
+                        <td>@employee.DateOfBirth</td>
+                        <td>@employee.Gender</td>
+                        <td>@employee.Email</td>
+                        <td>@employee.PhoneNumber</td>
+                        <td>@employee.Address</td>
+                        <td>@employee.IsActive</td>                        
+                        <td><a class="btn btn-dark" asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmployeeId">Edit</a></td>
+                        <td><a class="btn btn-danger" asp-action="Delete" asp-controller="Employee" asp-route-id="@employee.EmployeeId" onclick="return confirm('Are you sure want to delete this employee ?')">Delete</a></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>;
