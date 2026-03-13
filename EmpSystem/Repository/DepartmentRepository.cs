@@ -12,9 +12,26 @@ public class DepartmentRepository: IDepartmentRepository
     {
         _dbContext = dbContext;
     }
-    public Task<Department> GetAsync(int Id)
+    // public async Task<DepartmentViewModal> GetAsync(int Id)
+    // {
+    //     var department = await _dbContext.Departments.FindAsync(Id);
+    //     var departmentViewModal = new DepartmentViewModal()
+    //     {
+    //         DepartmentId = department.DepartmentId,
+    //         DepartmentName = department.DepartmentName,
+    //     };
+    //     return departmentViewModal;
+    // }
+
+    public async Task<DepartmentViewModal> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var department = await _dbContext.Departments.FindAsync(id);
+        var departmentViewModel = new DepartmentViewModal
+        {
+            DepartmentId = department.DepartmentId,
+            DepartmentName = department.DepartmentName
+        };
+        return departmentViewModel;
     }
 
     public async Task<List<DepartmentViewModal>> GetAllAsync()
@@ -45,13 +62,20 @@ public class DepartmentRepository: IDepartmentRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task UpdateAsync(Department department)
+    public async Task UpdateAsync(DepartmentViewModal departmentUpdated)
     {
-        throw new NotImplementedException();
+        var department = await _dbContext.Departments.FindAsync(departmentUpdated.DepartmentId);
+        department.DepartmentName = departmentUpdated.DepartmentName;
+
+        _dbContext.Departments.Update(department);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public Task DeleteAsync(int Id)
+ 
+    public async Task DeleteAsync(int Id)
     {
-        throw new NotImplementedException();
+        var department =await _dbContext.Departments.FindAsync(Id);
+        _dbContext.Departments.Remove(department);
+        await _dbContext.SaveChangesAsync();
     }
 }

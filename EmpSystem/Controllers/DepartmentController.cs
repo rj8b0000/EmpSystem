@@ -1,6 +1,7 @@
 using EmpSystem.Repository;
 using EmpSystem.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EmpSystem.Controllers;
 
@@ -43,5 +44,31 @@ public class DepartmentController : Controller
         TempData["message"] = $"Successfully added {model.DepartmentName}";
 
         return RedirectToAction("Index");
+    }
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var department = await _repository.GetByIdAsync(id);
+        return View(department);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(DepartmentViewModal department)
+    {
+        if (ModelState.IsValid)
+        {
+            //Update the database with modified details
+            await _repository.UpdateAsync(department);
+            return RedirectToAction("Index", "Department");
+        }
+        return View(department);
+    }
+    
+    
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _repository.DeleteAsync(id);
+        return RedirectToAction("Index",  "Department");
     }
 }

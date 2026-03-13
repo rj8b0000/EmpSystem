@@ -1,9 +1,11 @@
 @model EmpSystem.ViewModel.DepartmentViewModal
 @{
-    ViewData["Title"] = "Add Department";
+    ViewData["Title"] = "Edit Department";
 }
 
 <link rel="stylesheet" href="~/css/department-form.css" />
+
+
 <div class="row justify-content-center">
     <div class="col-lg-8 col-xl-7">
 
@@ -13,7 +15,7 @@
                 <i class="bi bi-arrow-left"></i>
             </a>
             <div>
-                <h4 class="mb-0 fw-bold" style="font-size:1.1rem; color:#1e2a3a;">Add New Department</h4>
+                <h4 class="mb-0 fw-bold" style="font-size:1.1rem; color:#1e2a3a;">Edit Department</h4>
             </div>
         </div>
 
@@ -28,9 +30,9 @@
 
             <!-- Card Body -->
             <div class="form-card-body">
-                <form asp-controller="Department" asp-action="Add" method="post">
+                <form asp-controller="Department" asp-action="Edit" method="post">
                     @Html.AntiForgeryToken()
-
+                    <input hidden asp-for="DepartmentId"/>
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label asp-for="DepartmentName" class="form-label">Department Name</label>
@@ -42,7 +44,7 @@
                     <!-- ACTIONS -->
                     <div class="d-flex align-items-center gap-3 pt-2 border-top" style="margin-top:8px; padding-top:20px!important;">
                         <button type="submit" class="btn-save">
-                            <i class="bi bi-check-lg"></i> Save Department
+                            <i class="bi bi-check-lg"></i> Save Changes
                         </button>
 
                         <a asp-controller="Employee" asp-action="Index" class="btn-cancel">

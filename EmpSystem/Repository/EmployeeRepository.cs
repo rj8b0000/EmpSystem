@@ -30,7 +30,7 @@ public class EmployeeRepository: IEmployeeRepository
         return employeeViewModal;
     }
 
-    public IQueryable<EmployeeViewModal> GetAllAsync()
+    public  IQueryable<EmployeeViewModal> GetAllAsync()
     {
         var employees = _dbContext.Employees.Select(e => new EmployeeViewModal
         {
