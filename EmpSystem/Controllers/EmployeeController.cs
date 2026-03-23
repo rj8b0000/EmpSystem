@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using EmpSystem.Models;
 using EmpSystem.Repository;
+using EmpSystem.Services.Interfaces;
 using EmpSystem.ViewModel;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
@@ -11,10 +12,16 @@ namespace EmpSystem.Controllers;
 public class EmployeeController: Controller 
 {
     private readonly IEmployeeRepository _employeeRepository;
+    private readonly IEmailService _emailService;
+    private readonly IEmailTemplateService _emailTemplateService;
+    private readonly ICompanySettingsService _companySettingsService;
     
-    public EmployeeController(IEmployeeRepository employeeRepository) 
+    public EmployeeController(IEmployeeRepository employeeRepository, IEmailService emailService, IEmailTemplateService emailTemplateService,  ICompanySettingsService companySettingsService) 
     {
         _employeeRepository = employeeRepository;
+        _emailService = emailService;
+        _emailTemplateService =  emailTemplateService;
+        _companySettingsService = companySettingsService;
     }
  public async Task<IActionResult> Index(string searchString, string sortOrder, int pageNumber, string currentFilter)
         {
@@ -65,8 +72,7 @@ public class EmployeeController: Controller
                     employees = employees.OrderBy(e => e.FirstName);
                     break;
             }
-
-            // Ensure pageNumber is at least 1
+            
             if (pageNumber < 1)
             {
                 pageNumber = 1;
@@ -94,6 +100,11 @@ public class EmployeeController: Controller
             return View(model);
         }
         await _employeeRepository.AddAsync(model);
+        var emailBody =
+            await _emailTemplateService.GetEmployeeWelcomeTemplateAsync(
+                model.FirstName
+            );
+        await _emailService.SendEmailAsync(model.Email, $"Welcome to the Organization, {model.FirstName}", emailBody);
         return RedirectToAction("Index",  "Employee");
     }
     

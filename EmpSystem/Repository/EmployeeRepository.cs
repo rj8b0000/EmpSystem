@@ -46,28 +46,6 @@ public class EmployeeRepository: IEmployeeRepository
             DepartmentId = e.DepartmentId,
         });
         return employees;
-        // List<Employee> employees = await _dbContext.Employees.ToListAsync();
-        // List<EmployeeViewModal> employeeViewModals = new List<EmployeeViewModal>();
-        //
-        // foreach (var employee in employees)
-        // {
-        //     var employeeModel = new EmployeeViewModal
-        //     {
-        //         EmployeeId = employee.EmployeeId,
-        //         FirstName = employee.FirstName,
-        //         LastName = employee.LastName,
-        //         DateOfBirth = employee.DateOfBirth,
-        //         Gender = employee.Gender,
-        //         Email = employee.Email,
-        //         PhoneNumber = employee.PhoneNumber,
-        //         Address = employee.Address,
-        //         IsActive = employee.IsActive,
-        //     };
-        //     employeeViewModals.Add(employeeModel);
-        // }
-        //
-        // return employeeViewModals;
-
     }
 
     public async Task AddAsync(EmployeeViewModal employee)

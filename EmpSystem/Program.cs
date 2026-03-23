@@ -1,5 +1,9 @@
+using EmpSystem.Controllers;
 using EmpSystem.Data;
+using EmpSystem.Models;
 using EmpSystem.Repository;
+using EmpSystem.Services.Implementations;
+using EmpSystem.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +20,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.Configure<CompanySettings>(builder.Configuration.GetSection("CompanySettings"));
+builder.Services.AddSingleton<ICompanySettingsService, CompanySettingsService>();
+builder.Services.AddSingleton<IEmailTemplateService, EmailTemplateService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
